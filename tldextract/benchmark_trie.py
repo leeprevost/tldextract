@@ -7,7 +7,7 @@ url = lambda x: ".".join(reversed(x.split(".")))
 
 test_data = pd.read_csv(path).rev_tld.apply(url)
 n = len(test_data)
-extractor1 = tldextract.TLDExtract(include_psl_private_domains=False)
+extractor1 = tldextract.TLDExtract(include_psl_private_domains=True)
 
 
 timeit.timeit('test_data.apply(extractor1)', globals=globals(), number=100)
