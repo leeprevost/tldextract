@@ -1,0 +1,28 @@
+Benchmark testing results 11/13/2024:
+
+testscript: benchmark_trie.py
+
+Baseline:
+- tldextract on 14,976 urls  (commit: 100da81)
+- extractor = tldextract.TLDExtract(include_psl_private_domains=False)
+- used pandas.apply(extractor)
+
+37.9 ms ± 149 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+
+
+New Trie:
+- tldextract on 14,976 urls
+- same extractor
+- used pandas.appy(extractor)
+
+60.5 ms ± 157 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+
+New Trie with key search:
+- same as above
+- used leetrie.suffix_index for search
+
+40.3 ms ± 214 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+
+
+
+

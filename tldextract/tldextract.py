@@ -48,6 +48,8 @@ import requests
 from .cache import DiskCache, get_cache_dir
 from .remote import lenient_netloc, looks_like_ip, looks_like_ipv6
 from .suffix_list import get_suffix_lists
+from tldextract import leetrie
+
 
 CACHE_TIMEOUT = os.environ.get("TLDEXTRACT_CACHE_TIMEOUT")
 
@@ -438,8 +440,9 @@ def extract(  # noqa: D103
 def update(*args, **kwargs):  # type: ignore[no-untyped-def]  # noqa: D103
     return TLD_EXTRACTOR.update(*args, **kwargs)
 
+Trie = leetrie.LeeTrie
 
-class _PublicSuffixListTLDExtractor:
+class _PublicSuffixListTLDExtractor_BAK:
     """Wrapper around this project's main algo for PSL lookups."""
 
     def __init__(
@@ -459,6 +462,7 @@ class _PublicSuffixListTLDExtractor:
             self.tlds_excl_private, frozenset(private_tlds)
         )
         self.tlds_excl_private_trie = Trie.create(self.tlds_excl_private)
+
 
     def tlds(self, include_psl_private_domains: bool | None = None) -> frozenset[str]:
         """Get the currently filtered list of suffixes."""
@@ -508,6 +512,9 @@ class _PublicSuffixListTLDExtractor:
 
         return i, node.is_private
 
+class _PublicSuffixListTLDExtractor(_PublicSuffixListTLDExtractor_BAK):
+
+    suffix_index = leetrie.suffix_index
 
 def _decode_punycode(label: str) -> str:
     lowered = label.lower()
