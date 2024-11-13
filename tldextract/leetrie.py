@@ -9,6 +9,12 @@ class TrieLeaf(dict):
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
 
+    def __getstate__(self):
+        return vars(self)
+
+    def __setstate__(self, state):
+        vars(self).update(state)
+
 class LeeTrie(TrieLeaf):
     """Pure Python dict Trie for storing eTLDs with their labels in reverse-order.
     Pure dict Trie should be faster and can also be serialized for parallel processing applications (eg. Pyspark).
