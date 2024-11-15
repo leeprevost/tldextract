@@ -5,6 +5,7 @@ import idna
 
 class TrieLeaf(dict):
     # add dot accessors
+
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
@@ -57,12 +58,13 @@ class LeeTrie(TrieLeaf):
         labels.reverse()
 
         for label in labels:
-            if label not in node.matches:
-                node.matches[label] = LeeTrie()
-            node = node.matches[label]
+            node = node['matches'].setdefault(label, LeeTrie())
+            #if label not in node['matches']:
+            #    node['matches'][label] = LeeTrie()
+            #node = node['matches'][label]
 
-        node.end = True
-        node.is_private = is_private
+        node['end'] = True
+        node['is_private'] = is_private
 
 
     # future: could embed search methods into Trie
@@ -98,8 +100,8 @@ def suffix_index(
         if is_wildcard:
             is_wildcard_exception = "!" + decoded_label in node['matches']
             if is_wildcard_exception:
-                return j, node['matches']["*"].is_private
-            return j - 1, node['matches']["*"].is_private
+                return j, node['matches']["*"]['is_private']
+            return j - 1, node['matches']["*"]['is_private']
 
         break
 
